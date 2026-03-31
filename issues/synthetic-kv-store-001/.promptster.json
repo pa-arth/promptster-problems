@@ -1,0 +1,14 @@
+{
+  "id": "synthetic-kv-store-001",
+  "type": "synthetic",
+  "repoUrl": "https://github.com/pa-arth/ttl-cache-assessment",
+  "brokenSha": "main",
+  "language": "typescript",
+  "difficulty": "standard",
+  "estimatedMinutes": 35,
+  "setupCommand": "npm install",
+  "testFile": "verify.test.ts",
+  "testDestination": "src/verify.test.ts",
+  "testCommand": "npx vitest run src/verify.test.ts",
+  "timeoutSeconds": 60
+}
