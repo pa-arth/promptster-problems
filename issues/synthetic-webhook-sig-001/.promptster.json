@@ -1,0 +1,18 @@
+{
+  "id": "synthetic-webhook-sig-001",
+  "type": "synthetic",
+  "repoUrl": "https://github.com/pa-arth/webhook-verify-assessment",
+  "brokenSha": "main",
+  "language": "typescript",
+  "difficulty": "standard",
+  "estimatedMinutes": 40,
+  "category": "api-middleware",
+  "inspiredBy": "Real pattern from Stripe/GitHub webhook integrations",
+  "title": "Webhook Signature Verification Fails for JSON Payloads",
+  "skillTags": ["http", "crypto", "middleware", "debugging"],
+  "setupCommand": "npm install",
+  "testFile": "verify.test.ts",
+  "testDestination": "src/__tests__/verify.test.ts",
+  "testCommand": "npx vitest run src/__tests__/verify.test.ts",
+  "timeoutSeconds": 120
+}

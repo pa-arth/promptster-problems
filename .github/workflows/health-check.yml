@@ -1,0 +1,64 @@
+name: Problem Health Check
+
+on:
+  schedule:
+    - cron: '0 9 1 * *' # 1st of every month at 9:00 UTC
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verify-problems:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        issue:
+          - synthetic-kv-store-001
+          - synthetic-webhook-sig-001
+    steps:
+      - name: Checkout promptster-problems
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Read problem config
+        id: config
+        run: |
+          CONFIG="issues/${{ matrix.issue }}/.promptster.json"
+          echo "repo_url=$(jq -r '.repoUrl' $CONFIG)" >> $GITHUB_OUTPUT
+          echo "broken_sha=$(jq -r '.brokenSha' $CONFIG)" >> $GITHUB_OUTPUT
+          echo "setup_command=$(jq -r '.setupCommand' $CONFIG)" >> $GITHUB_OUTPUT
+          echo "test_file=$(jq -r '.testFile' $CONFIG)" >> $GITHUB_OUTPUT
+          echo "test_destination=$(jq -r '.testDestination' $CONFIG)" >> $GITHUB_OUTPUT
+          echo "test_command=$(jq -r '.testCommand' $CONFIG)" >> $GITHUB_OUTPUT
+          echo "timeout=$(jq -r '.timeoutSeconds' $CONFIG)" >> $GITHUB_OUTPUT
+
+      - name: Clone problem repo at broken SHA
+        run: |
+          git clone "${{ steps.config.outputs.repo_url }}" problem-repo
+          cd problem-repo
+          git checkout "${{ steps.config.outputs.broken_sha }}"
+
+      - name: Install dependencies
+        working-directory: problem-repo
+        run: ${{ steps.config.outputs.setup_command }}
+
+      - name: Copy hidden test file
+        run: |
+          cp "issues/${{ matrix.issue }}/${{ steps.config.outputs.test_file }}" \
+             "problem-repo/${{ steps.config.outputs.test_destination }}"
+
+      - name: Verify tests FAIL on broken code
+        working-directory: problem-repo
+        run: |
+          # Tests should FAIL on the broken code — exit 0 means something is wrong
+          if timeout ${{ steps.config.outputs.timeout }} ${{ steps.config.outputs.test_command }} 2>&1; then
+            echo "::error::Tests PASSED on broken code for ${{ matrix.issue }} — problem may be stale"
+            exit 1
+          else
+            echo "Tests correctly FAIL on broken code for ${{ matrix.issue }}"
+          fi
