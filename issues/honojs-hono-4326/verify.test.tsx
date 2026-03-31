@@ -5,11 +5,11 @@
  *
  * These tests fail at brokenSha e1ae0eb, pass when the bug is fixed.
  */
-/** @jsxImportSource ../../ */
+/** @jsxImportSource ./ */
+
 import { describe, it, expect } from 'vitest'
-import type { FC, PropsWithChildren } from '../../src/jsx'
-import { createContext, useContext } from '../../src/jsx'
-import { renderToString } from '../../src/jsx/streaming'
+import type { FC, PropsWithChildren } from './base'
+import { createContext, useContext } from './context'
 
 describe('hono#4326: Context propagation through intermediate JSXNode', () => {
   it('useContext works when consumer is wrapped in a plain HTML element', () => {
@@ -28,7 +28,7 @@ describe('hono#4326: Context propagation through intermediate JSXNode', () => {
       </Ctx.Provider>
     )
 
-    const html = renderToString(<App />)
+    const html = (<App />).toString()
     expect(html).toContain('provided')
     expect(html).not.toContain('default')
   })
@@ -51,7 +51,7 @@ describe('hono#4326: Context propagation through intermediate JSXNode', () => {
       </Ctx.Provider>
     )
 
-    const html = renderToString(<App />)
+    const html = (<App />).toString()
     expect(html).toContain('provided')
     expect(html).not.toContain('default')
   })
@@ -70,7 +70,7 @@ describe('hono#4326: Context propagation through intermediate JSXNode', () => {
       </Ctx.Provider>
     )
 
-    const html = renderToString(<App />)
+    const html = (<App />).toString()
     expect(html).toContain('direct')
   })
 })
