@@ -1,0 +1,13 @@
+{
+  "id": "honojs-hono-4444",
+  "repoUrl": "https://github.com/honojs/hono",
+  "brokenSha": "e1ae0eb0f5a2dc1001895523016db02141972695",
+  "language": "typescript",
+  "difficulty": "warmup",
+  "issueUrl": "https://github.com/honojs/hono/issues/4444",
+  "setupCommand": "npm install",
+  "testFile": "verify.test.ts",
+  "testDestination": "src/helper/cookie/verify.test.ts",
+  "testCommand": "npx vitest run src/helper/cookie/verify.test.ts --reporter=json",
+  "timeoutSeconds": 120
+}

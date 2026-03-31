@@ -1,0 +1,13 @@
+{
+  "id": "pydantic-pydantic-12937",
+  "repoUrl": "https://github.com/pydantic/pydantic",
+  "brokenSha": "94dd544cc0ba0692801f429dd64124db76a4537d",
+  "language": "python",
+  "difficulty": "standard",
+  "issueUrl": "https://github.com/pydantic/pydantic/issues/12937",
+  "setupCommand": "pip install -e '.[dev]'",
+  "testFile": "verify_test.py",
+  "testDestination": "tests/verify_test.py",
+  "testCommand": "python -m pytest tests/verify_test.py -v",
+  "timeoutSeconds": 120
+}

@@ -1,0 +1,13 @@
+{
+  "id": "honojs-hono-4326",
+  "repoUrl": "https://github.com/honojs/hono",
+  "brokenSha": "e1ae0eb0f5a2dc1001895523016db02141972695",
+  "language": "typescript",
+  "difficulty": "standard",
+  "issueUrl": "https://github.com/honojs/hono/issues/4326",
+  "setupCommand": "npm install",
+  "testFile": "verify.test.tsx",
+  "testDestination": "src/jsx/verify.test.tsx",
+  "testCommand": "npx vitest run src/jsx/verify.test.tsx --reporter=json",
+  "timeoutSeconds": 120
+}

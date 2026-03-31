@@ -1,0 +1,13 @@
+{
+  "id": "spf13-cobra-2207",
+  "repoUrl": "https://github.com/spf13/cobra",
+  "brokenSha": "61968e893eee2f27696c2fbc8e34fa5c4afaf7c4",
+  "language": "go",
+  "difficulty": "standard",
+  "issueUrl": "https://github.com/spf13/cobra/issues/2207",
+  "setupCommand": "go mod download",
+  "testFile": "flag_suggestions_test.go",
+  "testDestination": "flag_suggestions_test.go",
+  "testCommand": "go test -run TestFlagSuggestion -v .",
+  "timeoutSeconds": 180
+}
