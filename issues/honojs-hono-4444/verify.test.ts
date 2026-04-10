@@ -1,8 +1,7 @@
 /**
- * Verification tests for honojs/hono#4444
- * Bug: getCookie returns stale data after setCookie in same request handler
- *
- * These tests fail at brokenSha e1ae0eb, pass when the bug is fixed.
+ * Tests for getCookie/setCookie consistency within a single request handler.
+ * getCookie should reflect values set by setCookie in the same handler,
+ * not return stale data from the original request cookies.
  */
 import { describe, it, expect } from 'vitest'
 import { Hono } from '../../index'

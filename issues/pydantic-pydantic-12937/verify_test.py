@@ -1,9 +1,6 @@
 """
-Verification tests for pydantic/pydantic#12937
-Bug: Extra fields accepted via model_validate(..., extra="allow") are
-     silently dropped by model_dump().
-
-These tests fail at brokenSha 94dd544, pass when the bug is fixed.
+Regression tests for extra fields with model_validate().
+Extra fields accepted via extra="allow" must be preserved by model_dump().
 """
 import json
 import pytest

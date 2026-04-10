@@ -1,10 +1,7 @@
 /**
- * Hidden verification tests for synthetic-webhook-sig-001.
- * These are fetched by the CLI at submission time — the candidate doesn't
- * see them during development.
- *
- * Verifies the core fix: webhook signature verification must use the raw
- * request body bytes, not a re-serialized version of the parsed JSON.
+ * Webhook signature verification tests.
+ * Ensures HMAC signatures are computed against the raw request body,
+ * not a re-serialized version of the parsed JSON.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
@@ -18,7 +15,7 @@ function signPayload(rawBody: string, secret: string): string {
   return createHmac('sha256', secret).update(rawBody).digest('hex');
 }
 
-describe('Webhook verification (hidden)', () => {
+describe('Webhook signature verification', () => {
   beforeEach(() => {
     eventStore.clear();
   });

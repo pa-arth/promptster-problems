@@ -1,10 +1,7 @@
 /**
- * Hidden verification tests for synthetic-kv-store-001.
- * These are fetched by the CLI at submission time — the candidate doesn't
- * see them during development.
- *
- * Tests the same bugs as cache.test.ts but with different values/timing
- * to prevent hardcoded fixes.
+ * Extended TTL cache regression tests.
+ * Covers expiration, size accounting, and consistency between
+ * get/has/keys/entries after entries expire.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TTLCache } from './cache.js';

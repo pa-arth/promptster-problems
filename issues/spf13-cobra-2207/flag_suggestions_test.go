@@ -1,8 +1,5 @@
-// Verification tests for spf13/cobra#2207
-// Feature: Add "Did you mean...?" suggestions for unknown flags,
+// Tests for "Did you mean...?" suggestions on unknown flags,
 // matching the existing behavior for unknown commands.
-//
-// These tests fail at brokenSha 61968e8, pass when the feature is implemented.
 package cobra
 
 import (
