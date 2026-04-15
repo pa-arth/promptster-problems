@@ -85,6 +85,57 @@ describe('Webhook signature verification', () => {
     expect(res.status).toBe(200);
   });
 
+  // ── Rejection: invalid signatures ─────────────────────────────
+
+  it('rejects webhook signed with wrong secret', async () => {
+    const body = '{"type":"test.event","payload":{}}';
+    const wrongSig = signPayload(body, 'wrong_secret_key');
+
+    const res = await request(app)
+      .post('/webhooks')
+      .set('Content-Type', 'application/json')
+      .set('x-webhook-id', 'v_reject_1')
+      .set('x-webhook-timestamp', new Date().toISOString())
+      .set('x-webhook-signature', wrongSig)
+      .send(body);
+
+    expect(res.status).toBe(401);
+  });
+
+  it('rejects webhook with structurally valid but incorrect HMAC', async () => {
+    const body = '{"type":"order.created","payload":{"id":"ord_1"}}';
+    // Valid hex, wrong HMAC
+    const fakeSig = 'a'.repeat(64);
+
+    const res = await request(app)
+      .post('/webhooks')
+      .set('Content-Type', 'application/json')
+      .set('x-webhook-id', 'v_reject_2')
+      .set('x-webhook-timestamp', new Date().toISOString())
+      .set('x-webhook-signature', fakeSig)
+      .send(body);
+
+    expect(res.status).toBe(401);
+  });
+
+  // ── Side effects: event storage ─────────────────────────────
+
+  it('stores the event after successful signature verification', async () => {
+    const body = '{"type": "invoice.paid", "payload": {"invoiceId": "inv_99", "total": 2500}}';
+    const signature = signPayload(body, WEBHOOK_SECRET);
+
+    const res = await request(app)
+      .post('/webhooks')
+      .set('Content-Type', 'application/json')
+      .set('x-webhook-id', 'v_store_1')
+      .set('x-webhook-timestamp', new Date().toISOString())
+      .set('x-webhook-signature', signature)
+      .send(body);
+
+    expect(res.status).toBe(200);
+    expect(eventStore.count()).toBeGreaterThanOrEqual(1);
+  });
+
   // ── Regression: existing middleware still works ────────────────
 
   it('auth middleware still rejects missing API key on events', async () => {
