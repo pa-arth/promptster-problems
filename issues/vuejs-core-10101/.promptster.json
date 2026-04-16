@@ -1,0 +1,15 @@
+{
+  "id": "vuejs-core-10101",
+  "repoUrl": "https://github.com/vuejs/core",
+  "brokenSha": "ffd0473e0f56de0f0d16b05b85d6b6f2e46bf10e",
+  "language": "typescript",
+  "difficulty": "deep",
+  "issueUrl": "https://github.com/vuejs/core/issues/10082",
+  "setupCommand": "corepack enable && corepack prepare --activate && pnpm install",
+  "testFile": "verify.spec.ts",
+  "testDestination": "packages/reactivity/__tests__/verify.spec.ts",
+  "testCommand": "node node_modules/vitest/vitest.mjs run packages/reactivity/__tests__/verify.spec.ts",
+  "timeoutSeconds": 300,
+  "expectedTests": 3,
+  "hygieneRules": ["no-any"]
+}
