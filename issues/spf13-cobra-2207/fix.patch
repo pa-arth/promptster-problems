@@ -1,0 +1,78 @@
+diff --git a/command.go b/command.go
+index c05fed4..894a4c0 100644
+--- a/command.go
++++ b/command.go
+@@ -1885,9 +1885,73 @@ func (c *Command) ParseFlags(args []string) error {
+ 		c.Print(c.flagErrorBuf.String())
+ 	}
+ 
++	if err != nil && !c.DisableSuggestions {
++		if enriched := c.suggestFlagFromUnknownErr(err); enriched != nil {
++			return enriched
++		}
++	}
+ 	return err
+ }
+ 
++// suggestFlagFromUnknownErr returns a wrapped error with a "Did you mean ..."
++// suggestion block appended when err is a pflag "unknown flag: --X" error and
++// at least one close flag exists. Returns nil if the error isn't an unknown-flag
++// error or no close match is found.
++func (c *Command) suggestFlagFromUnknownErr(err error) error {
++	if err == nil {
++		return nil
++	}
++	msg := err.Error()
++	const prefix = "unknown flag: --"
++	idx := strings.Index(msg, prefix)
++	if idx < 0 {
++		return nil
++	}
++	typedName := msg[idx+len(prefix):]
++	if sp := strings.IndexAny(typedName, " \t\n"); sp >= 0 {
++		typedName = typedName[:sp]
++	}
++	if typedName == "" {
++		return nil
++	}
++	if c.SuggestionsMinimumDistance <= 0 {
++		c.SuggestionsMinimumDistance = 2
++	}
++	suggestions := c.SuggestionsForFlag(typedName)
++	if len(suggestions) == 0 {
++		return nil
++	}
++	var sb strings.Builder
++	sb.WriteString(msg)
++	sb.WriteString("\n\nDid you mean this?\n")
++	for _, s := range suggestions {
++		sb.WriteString("\t--")
++		sb.WriteString(s)
++		sb.WriteString("\n")
++	}
++	return errors.New(sb.String())
++}
++
++// SuggestionsForFlag returns flag names that are close to typedName, using
++// Levenshtein distance (bounded by SuggestionsMinimumDistance) and a prefix
++// match, mirroring SuggestionsFor for commands.
++func (c *Command) SuggestionsForFlag(typedName string) []string {
++	c.mergePersistentFlags()
++	suggestions := []string{}
++	c.Flags().VisitAll(func(f *flag.Flag) {
++		if f.Hidden {
++			return
++		}
++		levenshteinDistance := ld(typedName, f.Name, true)
++		suggestByLevenshtein := levenshteinDistance <= c.SuggestionsMinimumDistance
++		suggestByPrefix := strings.HasPrefix(strings.ToLower(f.Name), strings.ToLower(typedName))
++		if suggestByLevenshtein || suggestByPrefix {
++			suggestions = append(suggestions, f.Name)
++		}
++	})
++	return suggestions
++}
++
+ // Parent returns a commands parent command.
+ func (c *Command) Parent() *Command {
+ 	return c.parent

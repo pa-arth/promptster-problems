@@ -1,0 +1,19 @@
+{
+  "id": "prometheus-prometheus-17643",
+  "repoUrl": "https://github.com/prometheus/prometheus",
+  "brokenSha": "f6ca7145ca2ffe8bdd81e373657c740544abc5ac",
+  "referenceSha": "39e11f50b257066cdc4d72d6df9582f3c3824242",
+  "language": "go",
+  "difficulty": "deep",
+  "issueUrl": "https://github.com/prometheus/prometheus/pull/17643",
+  "setupCommand": "go mod download",
+  "testFile": "verify_ignoring_test.go",
+  "testDestination": "promql/parser/verify_ignoring_test.go",
+  "testCommand": "go test ./promql/parser/ -run TestIgnoringPreservedWithGroupModifier -v -count=1",
+  "edgeCaseFile": "edge_cases_test.go",
+  "edgeCaseDestination": "promql/parser/verify_ignoring_edge_test.go",
+  "edgeCaseCommand": "go test ./promql/parser/ -run TestIgnoringEdgeCases -v -count=1",
+  "expectedTests": 10,
+  "timeoutSeconds": 180,
+  "hygieneRules": ["no-debug-go"]
+}

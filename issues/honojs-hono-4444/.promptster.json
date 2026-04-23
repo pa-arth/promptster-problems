@@ -8,6 +8,12 @@
   "setupCommand": "npm install",
   "testFile": "verify.test.ts",
   "testDestination": "src/helper/cookie/verify.test.ts",
-  "testCommand": "npx vitest run src/helper/cookie/verify.test.ts --reporter=json",
-  "timeoutSeconds": 120
+  "testCommand": "npx vitest run src/helper/cookie/verify.test.ts --reporter=default --coverage=false",
+  "edgeCaseFile": "edge-cases.test.ts",
+  "edgeCaseDestination": "src/helper/cookie/edge-cases.test.ts",
+  "edgeCaseCommand": "npx vitest run src/helper/cookie/edge-cases.test.ts --reporter=default --coverage=false",
+  "fixPatch": "fix.patch",
+  "expectedTests": 10,
+  "timeoutSeconds": 120,
+  "hygieneRules": ["no-any", "no-console-log"]
 }

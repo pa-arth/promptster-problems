@@ -1,0 +1,65 @@
+diff --git a/src/helper/cookie/index.ts b/src/helper/cookie/index.ts
+index 4602a8db..4023aa4e 100644
+--- a/src/helper/cookie/index.ts
++++ b/src/helper/cookie/index.ts
+@@ -24,25 +24,37 @@ interface GetSignedCookie {
+   ): Promise<string | undefined | false>
+ }
+ 
++
++// Context-scoped overlay of cookies set in the current handler so that
++// getCookie() reflects prior setCookie() calls within the same request.
++const COOKIE_OVERLAY_KEY = '__hono_cookie_overlay__'
++type CookieOverlay = Map<string, string>
++
+ export const getCookie: GetCookie = (c, key?, prefix?: CookiePrefixOptions) => {
++  const overlay = c.get(COOKIE_OVERLAY_KEY) as CookieOverlay | undefined
+   const cookie = c.req.raw.headers.get('Cookie')
+   if (typeof key === 'string') {
+-    if (!cookie) {
+-      return undefined
+-    }
+     let finalKey = key
+     if (prefix === 'secure') {
+       finalKey = '__Secure-' + key
+     } else if (prefix === 'host') {
+       finalKey = '__Host-' + key
+     }
++    if (overlay?.has(finalKey)) {
++      return overlay.get(finalKey)
++    }
++    if (!cookie) {
++      return undefined
++    }
+     const obj = parse(cookie, finalKey)
+     return obj[finalKey]
+   }
+-  if (!cookie) {
+-    return {}
++  const obj: Record<string, string> = cookie ? parse(cookie) : {}
++  if (overlay) {
++    for (const [k, v] of overlay) {
++      obj[k] = v
++    }
+   }
+-  const obj = parse(cookie)
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   return obj as any
+ }
+@@ -99,6 +111,16 @@ export const generateCookie = (name: string, value: string, opt?: CookieOptions)
+ export const setCookie = (c: Context, name: string, value: string, opt?: CookieOptions): void => {
+   const cookie = generateCookie(name, value, opt)
+   c.header('Set-Cookie', cookie, { append: true })
++  const overlay =
++    (c.get(COOKIE_OVERLAY_KEY) as CookieOverlay | undefined) ?? new Map<string, string>()
++  const finalName =
++    opt?.prefix === 'secure'
++      ? '__Secure-' + name
++      : opt?.prefix === 'host'
++        ? '__Host-' + name
++        : name
++  overlay.set(finalName, value)
++  c.set(COOKIE_OVERLAY_KEY, overlay)
+ }
+ 
+ export const generateSignedCookie = async (

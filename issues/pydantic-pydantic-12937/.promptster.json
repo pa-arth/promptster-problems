@@ -5,9 +5,15 @@
   "language": "python",
   "difficulty": "standard",
   "issueUrl": "https://github.com/pydantic/pydantic/issues/12937",
-  "setupCommand": "pip install -e '.[dev]'",
+  "setupCommand": "uv sync --group testing-extra --all-extras",
   "testFile": "verify_test.py",
   "testDestination": "tests/verify_test.py",
-  "testCommand": "python -m pytest tests/verify_test.py -v",
-  "timeoutSeconds": 120
+  "testCommand": "uv run pytest tests/verify_test.py -v",
+  "edgeCaseFile": "edge_cases_test.py",
+  "edgeCaseDestination": "tests/verify_edge_test.py",
+  "edgeCaseCommand": "uv run pytest tests/verify_edge_test.py -v",
+  "fixPatch": "fix.patch",
+  "expectedTests": 10,
+  "timeoutSeconds": 300,
+  "hygieneRules": ["no-debug-python"]
 }
