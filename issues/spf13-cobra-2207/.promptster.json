@@ -8,6 +8,12 @@
   "setupCommand": "go mod download",
   "testFile": "flag_suggestions_test.go",
   "testDestination": "flag_suggestions_test.go",
-  "testCommand": "go test -run TestFlagSuggestion -v .",
-  "timeoutSeconds": 180
+  "testCommand": "go test -run ^TestFlagSuggestion -v -count=1 .",
+  "edgeCaseFile": "flag_suggestions_edge_test.go",
+  "edgeCaseDestination": "flag_suggestions_edge_test.go",
+  "edgeCaseCommand": "go test -run ^TestCobra2207FlagEdge -v -count=1 .",
+  "fixPatch": "fix.patch",
+  "expectedTests": 9,
+  "timeoutSeconds": 180,
+  "hygieneRules": ["no-debug-go"]
 }

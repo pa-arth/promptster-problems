@@ -8,6 +8,11 @@
   "setupCommand": "npm install",
   "testFile": "verify.test.tsx",
   "testDestination": "src/jsx/verify.test.tsx",
-  "testCommand": "npx vitest run src/jsx/verify.test.tsx --reporter=json",
-  "timeoutSeconds": 120
+  "testCommand": "npx vitest run src/jsx/verify.test.tsx --reporter=default --coverage=false",
+  "edgeCaseFile": "edge-cases.test.tsx",
+  "edgeCaseDestination": "src/jsx/verify_edge.test.tsx",
+  "edgeCaseCommand": "npx vitest run src/jsx/verify_edge.test.tsx --reporter=default --coverage=false",
+  "expectedTests": 4,
+  "timeoutSeconds": 120,
+  "hygieneRules": ["no-any", "no-console-log"]
 }
