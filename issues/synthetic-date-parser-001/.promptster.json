@@ -1,0 +1,21 @@
+{
+  "id": "synthetic-date-parser-001",
+  "version": "1.0.0",
+  "type": "synthetic",
+  "repoUrl": "https://github.com/pa-arth/date-parser-assessment",
+  "brokenSha": "main",
+  "language": "typescript",
+  "difficulty": "warmup",
+  "estimatedMinutes": 45,
+  "category": "data-handling",
+  "inspiredBy": "Common ISO-8601 round-trip bug in parsers that strip timezone offsets when normalizing to UTC (date-fns #1853, moment-timezone #927).",
+  "title": "Date parser silently drops timezone on round-trip",
+  "skillTags": ["date-time", "iso-8601", "timezone", "debugging", "regression-testing"],
+  "setupCommand": "npm install",
+  "testFile": "verify.test.ts",
+  "testDestination": "src/lib/__tests__/verify.test.ts",
+  "testCommand": "npx vitest run src/lib/__tests__/verify.test.ts",
+  "expectedTests": 6,
+  "timeoutSeconds": 60,
+  "hygieneRules": ["no-any", "no-console-log"]
+}
